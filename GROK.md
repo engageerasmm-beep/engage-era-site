@@ -38,9 +38,12 @@ FACT RULES
 - If something is unconfirmed, write "unconfirmed" next to it.
 
 IMAGE RULES
-- Never create AI images of real, identifiable people (founders, celebrities, executives). For real people, use official press photos only and put the link in IMAGE CREDIT.
-- Use company logos only from official press kits.
-- Prefer AI illustrations of objects, interfaces, scenes and concepts over photos of people.
+- Posts with real people perform best. Use them whenever the story has a person at the center.
+- For real people, use official photos only: the company's press kit or newsroom, the person's or brand's own website or official social accounts, or event press photos. Put the source link in IMAGE CREDIT.
+- Never take photos from Getty, AP, Reuters or other news outlets' articles.
+- Never create or edit AI images of real, identifiable people.
+- Company logos only from official press kits.
+- If there's no usable official photo, use an AI illustration of the product, interface or concept instead.
 
 GUIDES (evergreen articles Claude writes)
 - When I say "cover for a guide" and give you a headline, make only the Instagram-style image in the same style, with CATEGORY "Guides", source line "ENGAGEERA, BY BEN MELLER", and an illustration (no people). The packet can just contain HEADLINE, CATEGORY, DATE and IMAGE CREDIT.
