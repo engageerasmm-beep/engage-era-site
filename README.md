@@ -10,7 +10,9 @@ Static site for eesmm.com: the newsroom (home, news, articles, The Brief), Engag
 ## Add an article
 1. Copy an article block in `src/articles.py`, give it a new `slug`, and write it.
 2. Run `python3 src/build.py`.
-3. Deploy (push to GitHub, or drag `public/` into Netlify).
+3. Commit and push to GitHub (`git@github.com:engageerasmm-beep/engage-era-site.git`, branch `main`). Netlify deploys automatically in about a minute.
+
+Each publish uses 15 of Netlify's 300 free monthly credits, so batch changes: publish 2–3 times a week, not after every edit.
 
 ## Pages
 | URL | Page | Indexed |
