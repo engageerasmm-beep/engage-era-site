@@ -224,6 +224,8 @@ def build_home():
 def build_news():
     up = "../"
     cats = [("all", "All"), ("platforms", "Platforms"), ("founders", "Founder stories"), ("ai", "AI"), ("guides", "Guides"), ("campaigns", "Campaigns"), ("creators", "Creators")]
+    used = {a["cat"] for a in ARTICLES} | {x["cat"] for x in INSTAGRAM}
+    cats = [(k, l) for k, l in cats if k == "all" or k in used]
     chips = "".join(f'<button class="chip" aria-pressed="{"true" if k == "all" else "false"}" data-f="{k}">{l}</button>' for k, l in cats)
     cards = "".join(article_card(a, up) for a in ARTICLES) + "".join(ig_card(s) for s in INSTAGRAM)
     body = f"""{masthead()}
