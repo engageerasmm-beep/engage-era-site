@@ -1,0 +1,3 @@
+# Netlify config for eesmm.com. Headers live in public/_headers so drag-and-drop deploys keep them.
+[build]
+  publish = "public"

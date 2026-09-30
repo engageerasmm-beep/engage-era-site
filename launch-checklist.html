@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engage Era Launch Checklist</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root { --night:#060819; --navy:#0b0f2e; --panel:#11163d; --line:#232a5c; --blue:#1466ff; --sky:#5aaee6; --red:#e4262c; --white:#f4f5fa; --mute:#9aa1c2; --ok:#3ecf8e; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--night); color:var(--white); font-family:"Archivo",Arial,sans-serif; font-size:16px; line-height:1.5; padding:32px 20px 80px; }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  h1, h2 { font-family:"Anton",Impact,sans-serif; font-weight:400; text-transform:uppercase; margin:0; line-height:1; }
+  h1 { font-size: 48px; } h1 span { color: var(--red); }
+  .sub { color: var(--mute); margin-top: 10px; }
+  .bar { height: 8px; background: var(--panel); border-radius: 99px; margin: 22px 0 6px; overflow: hidden; }
+  .bar i { display:block; height:100%; width:0; background: var(--ok); transition: width .3s; }
+  .count { font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--mute); letter-spacing:.08em; text-transform:uppercase; }
+  section { margin-top: 36px; }
+  h2 { font-size: 28px; display:flex; align-items:baseline; gap:12px; border-top:3px solid var(--white); padding-top:12px; }
+  h2 small { font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--sky); letter-spacing:.12em; }
+  .note { margin-top:10px; color:var(--mute); font-size:14px; }
+  .step { display:grid; grid-template-columns: 30px 1fr; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .step input { width: 22px; height: 22px; accent-color: var(--ok); margin-top: 2px; cursor: pointer; }
+  .step.done .body > b { text-decoration: line-through; color: var(--mute); }
+  .body > b { font-size: 17px; }
+  .who { font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; padding:2px 7px; border-radius:4px; margin-left:8px; vertical-align:middle; }
+  .you { background: var(--blue); } .claude { background: #3b2b6b; }
+  .body p, .body ul { margin: 6px 0 0; color: #cfd3e3; font-size: 15px; }
+  .body ul { padding-left: 18px; }
+  .path { font-family:"IBM Plex Mono",monospace; font-size: 13px; color: var(--sky); }
+  a.go { display:inline-block; margin-top:10px; background: var(--red); color:#fff; font-weight:700; text-decoration:none; padding:9px 16px; border-radius:4px; font-size:14px; }
+  a.go.alt { background: transparent; border:1px solid var(--line); }
+  .copy { display:flex; align-items:center; gap:8px; margin-top:8px; flex-wrap: wrap; }
+  .copy code { font-family:"IBM Plex Mono",monospace; background: var(--panel); border:1px solid var(--line); padding:7px 10px; border-radius:5px; font-size:14px; user-select: all; }
+  .copy button { font: inherit; font-size:12px; font-weight:600; background: var(--white); color: var(--night); border:0; border-radius:4px; padding:7px 12px; cursor:pointer; }
+  table { width:100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+  th, td { text-align:left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  th { font-family:"IBM Plex Mono",monospace; font-size: 11px; color: var(--mute); letter-spacing:.1em; text-transform: uppercase; font-weight: 500; }
+  td code { font-family:"IBM Plex Mono",monospace; color: var(--sky); }
+  .warn { margin-top: 12px; background: rgba(228,38,44,.12); border: 1px solid rgba(228,38,44,.5); border-radius: 8px; padding: 12px 14px; font-size: 14px; }
+  .warn b { color: #ff8a8e; }
+  .help { margin-top: 36px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px; font-size: 14px; color: #cfd3e3; }
+  .help b { color: var(--white); }
+  button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Launch <span>eesmm.com</span></h1>
+  <p class="sub">Check each box as you go. Your progress saves in this tab. Blue tags are steps for you; purple tags are steps Claude can do or check for you.</p>
+  <div class="bar"><i id="bar"></i></div>
+  <div class="count" id="count">0 of 0 done</div>
+
+  <section>
+    <h2>Part 1 <small>Put the site online · ~5 min</small></h2>
+
+    <div class="step"><input type="checkbox" id="s1"><div class="body">
+      <b>Open Netlify Drop</b><span class="who you">You</span>
+      <a class="go" href="https://app.netlify.com/drop" target="_blank" rel="noopener">Open Netlify Drop →</a>
+    </div></div>
+
+    <div class="step"><input type="checkbox" id="s2"><div class="body">
+      <b>Drag the site onto "Drop here"</b><span class="who you">You</span>
+      <p>Drag <b>engage-era-site.zip</b> from the Finder window Claude opened. If it hangs past 2 minutes, refresh and drag the <b>public</b> folder instead.</p>
+      <p class="path">Scratch folder → engage-era-site → deploy → engage-era-site.zip</p>
+      <p>Lost the Finder window? Tell Claude "show me the zip."</p>
+    </div></div>
+
+    <div class="step"><input type="checkbox" id="s3"><div class="body">
+      <b>Check the live link on your phone</b><span class="who you">You</span>
+      <p>You'll get a link ending in <b>.netlify.app</b>. Open it on your phone and tap through: home, a news story, Studio, Founder.</p>
+    </div></div>
+
+    <div class="step"><input type="checkbox" id="s4"><div class="body">
+      <b>Sign up to claim the site</b><span class="who you">You</span>
+      <p>Click the sign-up / claim prompt. "Sign up with Google" is fastest. Drop sites that aren't claimed get deleted after about an hour.</p>
+    </div></div>
+
+    <div class="step"><input type="checkbox" id="s5"><div class="body">
+      <b>Rename the site to engageera</b><span class="who you">You</span>
+      <p>Open your site in Netlify → <b>Project configuration</b> → <b>General</b> → <b>Change project name</b>. Paste:</p>
+      <div class="copy"><code>engageera</code><button data-copy="engageera">Copy</button></div>
+      <p>Your site is now <b>engageera.netlify.app</b>. If that name is taken, try <code>engageera-news</code> and tell Claude.</p>
+    </div></div>
+
+    <div class="step"><input type="checkbox" id="s6"><div class="body">
+      <b>Turn on forms</b><span class="who you">You</span>
+      <a class="go" href="https://app.netlify.com/projects/engageera/forms" target="_blank" rel="noopener">Open Forms page →</a>
+      <p>Click <b>Enable form detection</b>. Then go to <b>Deploys</b> and drag the same zip in once more so Netlify finds the Studio application and newsletter forms.</p>
+    </div></div>
+
+    <div class="step"><input type="checkbox" id="s7"><div class="body">
+      <b>Send form submissions to your email</b><span class="who you">You</span>
+      <a class="go" href="https://app.netlify.com/projects/engageera/forms?tab=notifications" target="_blank" rel="noopener">Open form notifications →</a>
+      <p><b>Add notification</b> → <b>Email notification</b>. Form: <b>Any form</b>. Email:</p>
+      <div class="copy"><code>ben@eesmm.com</code><button data-copy="ben@eesmm.com">Copy</button></div>
+      <p class="note">Netlify's menu names shift sometimes. If you can't find something, screenshot it and paste it to Claude.</p>
+    </div></div>
+
+    <div class="step"><input type="checkbox" id="s8"><div class="body">
+      <b>Tell Claude the site is live</b><span class="who claude">Claude</span>
+      <p>Paste your .netlify.app link into the chat. Claude will open it and check every page, form and image.</p>
+    </div></div>
+  </section>
+
+  <section>
+    <h2>Part 2 <small>Connect eesmm.com · ~10 min</small></h2>
+    <p class="note">Do this after you've confirmed SoFi, Rise Above and Rome are OK to show on the site.</p>
+
+    <div class="step"><input type="checkbox" id="s9"><div class="body">
+      <b>Add your domain in Netlify</b><span class="who you">You</span>
+      <p>Your site → <b>Domain management</b> → <b>Add a domain</b> → type the domain → <b>Verify</b> → <b>Add domain</b>. When it asks about DNS, keep your DNS at GoDaddy (don't move it to Netlify).</p>
+      <div class="copy"><code>eesmm.com</code><button data-copy="eesmm.com">Copy</button></div>
+    </div></div>
+
+    <div class="step"><input type="checkbox" id="s10"><div class="body">
+      <b>Open GoDaddy DNS and screenshot it</b><span class="who you">You</span>
+      <a class="go" href="https://dcc.godaddy.com/domains" target="_blank" rel="noopener">Open GoDaddy domains →</a>
+      <p>Click <b>eesmm.com</b> → <b>DNS</b>. Take a screenshot of every record (Cmd+Shift+4) and paste it to Claude before changing anything. That's your backup.</p>
+    </div></div>
+
+    <div class="step"><input type="checkbox" id="s11"><div class="body">
+      <b>Claude checks your records</b><span class="who claude">Claude</span>
+      <p>Claude marks exactly which two lines to edit and confirms which ones run your email. Wait for the go-ahead.</p>
+    </div></div>
+
+    <div class="step"><input type="checkbox" id="s12"><div class="body">
+      <b>Change exactly these two records</b><span class="who you">You</span>
+      <table>
+        <thead><tr><th>Type</th><th>Name</th><th>Value</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td><code>@</code></td><td><code>75.2.60.5</code></td><td><button data-copy="75.2.60.5">Copy</button></td></tr>
+          <tr><td>CNAME</td><td><code>www</code></td><td><code>engageera.netlify.app</code></td><td><button data-copy="engageera.netlify.app">Copy</button></td></tr>
+        </tbody>
+      </table>
+      <p>Edit the existing records with those names. If there's more than one <b>A</b> record for <b>@</b>, or any <b>AAAA</b> record for <b>@</b>, delete the extras. If GoDaddy says the domain is connected to Website Builder, disconnect that first.</p>
+      <div class="warn"><b>Do not touch:</b> MX, TXT, SRV, or CNAMEs named autodiscover, lyncdiscover, sip, enterpriseregistration, enterpriseenrollment. Those run your Microsoft email.</div>
+    </div></div>
+
+    <div class="step"><input type="checkbox" id="s13"><div class="body">
+      <b>Turn on HTTPS in Netlify</b><span class="who you">You</span>
+      <p><b>Domain management</b> → <b>HTTPS</b> → <b>Verify DNS configuration</b> → <b>Provision certificate</b>. If it says DNS isn't ready, wait 30 minutes and try again. It can take up to 24 hours.</p>
+    </div></div>
+
+    <div class="step"><input type="checkbox" id="s14"><div class="body">
+      <b>Open eesmm.com and confirm the new site loads</b><span class="who you">You</span>
+      <a class="go alt" href="https://eesmm.com" target="_blank" rel="noopener">Open eesmm.com →</a>
+      <p>Still seeing the old GoDaddy site? Give it an hour, or check on your phone with Wi-Fi off.</p>
+    </div></div>
+  </section>
+
+  <section>
+    <h2>Part 3 <small>Wrap up · ~5 min</small></h2>
+
+    <div class="step"><input type="checkbox" id="s15"><div class="body">
+      <b>Test your email</b><span class="who you">You</span>
+      <p>From your Gmail, send an email to ben@eesmm.com. Reply to it from ben@eesmm.com. Both should arrive.</p>
+    </div></div>
+
+    <div class="step"><input type="checkbox" id="s16"><div class="body">
+      <b>Test the forms</b><span class="who you">You</span>
+      <p>Subscribe to The Brief with your own email, and submit a test application on the Studio page. Both should land in your inbox.</p>
+    </div></div>
+
+    <div class="step"><input type="checkbox" id="s17"><div class="body">
+      <b>Cancel GoDaddy Website Builder</b><span class="who you">You</span>
+      <p>Only once the new site is showing at eesmm.com. Keep the domain itself; you're only canceling the builder plan.</p>
+    </div></div>
+  </section>
+
+  <div class="help"><b>Stuck anywhere?</b> Take a screenshot (Cmd+Shift+4, drag over the window) and paste it into the chat with Claude. You'll get the exact next click.</div>
+</div>
+
+<script>
+  var KEY = 'ee-launch-v1';
+  var boxes = [].slice.call(document.querySelectorAll('.step input'));
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  function render() {
+    var done = 0;
+    boxes.forEach(function (b) { var on = !!state[b.id]; b.checked = on; b.closest('.step').classList.toggle('done', on); if (on) done++; });
+    document.getElementById('bar').style.width = (done / boxes.length * 100) + '%';
+    document.getElementById('count').textContent = done + ' of ' + boxes.length + ' done';
+  }
+  boxes.forEach(function (b) { b.addEventListener('change', function () { state[b.id] = b.checked; try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} render(); }); });
+  document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var t = btn.getAttribute('data-copy'), orig = btn.textContent;
+      function ok() { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = orig; }, 1200); }
+      if (navigator.clipboard) navigator.clipboard.writeText(t).then(ok, function () { prompt('Copy this:', t); });
+      else prompt('Copy this:', t);
+    });
+  });
+  render();
+</script>
+</body>
+</html>

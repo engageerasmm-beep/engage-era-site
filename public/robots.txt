@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /results/
+Disallow: /thanks/
+
+Sitemap: https://eesmm.com/sitemap.xml
