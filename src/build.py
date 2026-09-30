@@ -1,5 +1,5 @@
 """Builds the Engage Era site into ../public. Run: python3 src/build.py"""
-import json, os, re, datetime, html
+import json, os, re, datetime, html, hashlib
 from articles import ARTICLES, INSTAGRAM
 
 SITE = "https://eesmm.com"
@@ -12,6 +12,12 @@ BRANDS = ["SoFi", "Oil Nut Bay", "Good Molecules", "Rise Above", "Rome", "Better
 FONTS = "https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
 LOGO_DEFS = '<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="eeg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5aaee6"/><stop offset="1" stop-color="#1466ff"/></linearGradient><g id="ee" fill="url(#eeg)"><path d="M51 0H346L297 67H39Z"/><path d="M31 117H261L216 176H20Z"/><path d="M11 227H247L420 0H670L658 67H440L269 293H0Z"/><path d="M466 117H650L640 176H422Z"/><path d="M389 227H631L620 293H342Z"/></g></defs></svg>'
 MARK = '<svg class="mark" viewBox="0 0 670 293" aria-hidden="true"><use href="#ee"/></svg>'
+
+
+def asset_version(name):
+    """Short content hash so browsers fetch styles/scripts again whenever they change."""
+    with open(os.path.join(ROOT, "assets", name), "rb") as f:
+        return hashlib.sha1(f.read()).hexdigest()[:8]
 
 
 def fmt_date(s):
@@ -65,14 +71,14 @@ def page(path, title, desc, body, *, depth, active="", schema=None, noindex=Fals
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS}">
-<link rel="stylesheet" href="{up}assets/styles.css">
+<link rel="stylesheet" href="{up}assets/styles.css?v={asset_version('styles.css')}">
 {ld}
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 {LOGO_DEFS}
 {body.replace("%UP%", up).replace("%NAV%", nav).replace("%CTA%", cta).replace("%WORD%", word_extra)}
-<script src="{up}assets/site.js" defer></script>
+<script src="{up}assets/site.js?v={asset_version('site.js')}" defer></script>
 </body>
 </html>
 """
