@@ -3,6 +3,113 @@
 
 ARTICLES = [
 {
+  "slug": "muse-small-business",
+  "cat": "ai",
+  "cat_label": "AI",
+  "date": "2026-09-30",
+  "read": "4 min read",
+  "image": "muse-small-business.jpg",
+  "image_credit": "Image: Meta",
+  "title": "Meta's Muse AI Agent <r>Connects</r> to Shopify, QuickBooks and Your Meta Ads",
+  "seo_title": "Muse for Small Business: Meta's AI Agent Connects to Shopify, QuickBooks and Meta Ads",
+  "description": "Meta's Muse for Small Business connects its AI agent to Instagram analytics, Facebook Pages, Meta ad accounts and tools like Shopify, QuickBooks, Stripe and Canva. What it does and how to use it.",
+  "dek": "Meta's AI agent now plugs into your ad account, your store and your books. Here's what Muse for Small Business connects to, what it costs, and where to keep a human in the loop.",
+  "tldr": "On September 29, Meta announced Muse for Small Business. Its Muse AI agent can now connect to Instagram professional analytics, Facebook Pages and Meta ad accounts, plus tools like Shopify, Intuit QuickBooks, Stripe, Canva, Klaviyo and Slack. Meta says nothing publishes, sends or spends without your approval, and Muse is free for most needs, with paid plans for more.",
+  "faq": [
+    ("What is Muse for Small Business?", "It's Meta's expansion of its Muse AI agent for business owners, announced September 29, 2026, adding skills and connectors so Muse can work with your business accounts and tools."),
+    ("What apps does Muse for Small Business connect to?", "Instagram professional analytics, Facebook Pages and Meta ad accounts, plus Asana, Box, Canva, Dropbox, Figma, Granola, HighLevel, Intuit QuickBooks, Klaviyo, Lovable, Notion, Shopify, Slack, Stripe and Zoom. Custom connectors are also supported."),
+    ("Is Muse for Small Business free?", "Meta says Muse is free for most of what people need, with subscription plans for those who want more. Meta hasn't published specific prices for business use in its announcement."),
+  ],
+  "body": """
+<p>Meta's AI agent is moving from your personal life into your business. On September 29, Meta <a href="https://about.fb.com/news/2026/09/introducing-muse-small-business/" rel="noopener">announced Muse for Small Business</a>, adding new skills and connectors so its Muse agent can help people run their businesses.</p>
+
+<h2>What happened</h2>
+<p>Meta introduced Muse earlier in September as a personal AI agent, available in the US and Canada. The small business version plugs it into the accounts and tools owners already use. According to <a href="https://techcrunch.com/2026/09/29/meta-is-expanding-its-ai-agent-muse-to-small-businesses/" rel="noopener">TechCrunch</a>, Muse topped the app charts in the U.S. and Canada, ahead of ChatGPT, after its launch.</p>
+
+<h2>What it connects to</h2>
+<p>Meta says Muse can connect your Instagram professional account analytics, Facebook Pages and Meta ad accounts "in a few clicks." Beyond Meta's own apps, the named connectors are:</p>
+<p>Asana, Box, Canva, Dropbox, Figma, Granola, HighLevel, Intuit QuickBooks, Klaviyo, Lovable, Notion, Shopify, Slack, Stripe and Zoom, with custom connectors supported too. Intuit covered the QuickBooks side in <a href="https://www.intuit.com/blog/innovative-thinking/tech-innovation/intuit-quickbooks-joins-muse-for-small-business/" rel="noopener">its own post</a>.</p>
+<p>With that access, Meta says Muse can help build growth plans from your sales and campaigns, improve ads and content by analyzing performance and drafting campaigns, keep an eye on financial performance, and flag tasks worth doing.</p>
+
+<h2>The guardrails and the price</h2>
+<p>Meta's line on control is direct: "You're in control: nothing publishes, sends, or spends without your approval." On cost, Meta says Muse is free for most of what people need, with subscription plans for those who want more. Specific prices for business use weren't in the announcement.</p>
+<p>Meta also quoted Tom Mulholland, who owns Mulholland Grocery in Malvern, Iowa: "I work about 65 hours a week, and there are so many things where I'm the only one who can do them."</p>
+
+<h2>Why brands should care</h2>
+<p>Meta has scale here. "We have 200 million small business owners on our platform at Meta," Meta President and Vice Chairman Dina Powell McCormick told <a href="https://www.cnbc.com/2026/09/29/meta-is-bringing-muse-ai-to-small-businesses-and-it-already-has-a-huge-head-start.html" rel="noopener">CNBC</a>. An agent that can see your Instagram analytics, your ad account and your Shopify sales at once can connect dots that usually live in three different tabs.</p>
+<p>It also means an AI can draft ads against a real ad account. The approval step is what keeps that useful instead of expensive.</p>
+
+<h2>What to do</h2>
+<ol>
+<li><strong>Start with read-only jobs.</strong> Ask for a performance summary or growth plan before letting it draft anything.</li>
+<li><strong>Connect only what you need.</strong> Instagram and your ad account first; add finance tools once you trust the output.</li>
+<li><strong>Keep approvals on.</strong> Review every post, send and spend it proposes.</li>
+<li><strong>Check its numbers.</strong> Compare its summaries against Ads Manager and your store dashboard before acting.</li>
+<li><strong>Keep strategy with people.</strong> Use it for drafts and analysis; positioning and taste are still your call.</li>
+</ol>
+
+<h2>Sources</h2>
+<ul>
+<li><a href="https://about.fb.com/news/2026/09/introducing-muse-small-business/" rel="noopener">Meta: Introducing Muse for Small Business</a></li>
+<li><a href="https://www.intuit.com/blog/innovative-thinking/tech-innovation/intuit-quickbooks-joins-muse-for-small-business/" rel="noopener">Intuit: QuickBooks joins Muse for Small Business</a></li>
+<li><a href="https://techcrunch.com/2026/09/29/meta-is-expanding-its-ai-agent-muse-to-small-businesses/" rel="noopener">TechCrunch: Meta is expanding Muse to small businesses</a></li>
+<li><a href="https://www.cnbc.com/2026/09/29/meta-is-bringing-muse-ai-to-small-businesses-and-it-already-has-a-huge-head-start.html" rel="noopener">CNBC: Meta is bringing Muse AI to small businesses</a></li>
+</ul>
+"""
+},
+{
+  "slug": "meta-enterprise-platform",
+  "cat": "ai",
+  "cat_label": "AI",
+  "date": "2026-09-30",
+  "read": "4 min read",
+  "image": "meta-enterprise-platform.jpg",
+  "image_credit": "Image: Meta",
+  "title": "Meta Calls AI for Businesses Its Next <r>Major</r> Pillar",
+  "seo_title": "Meta Enterprise Platform: What Meta's New AI Business Means for Brands",
+  "description": "Meta launched Meta Enterprise Platform to bring Muse, Meta Business Agent, Muse API and Muse Code to businesses, led by former MongoDB CEO CJ Desai. What's confirmed and what brands should do.",
+  "dek": "Meta is turning the AI behind its apps into products companies can deploy themselves, and hired MongoDB's CEO to run it. Here's what's confirmed, and what isn't yet.",
+  "tldr": "On September 28, Meta launched Meta Enterprise Platform, which Mark Zuckerberg called \"the next major pillar\" of its business. It will start by bringing Meta's AI stack, including the Muse agent, Meta Business Agent, Muse API and Muse Code, to businesses and developers. Former MongoDB CEO CJ Desai leads it. Meta hasn't shared pricing or launch dates.",
+  "faq": [
+    ("What is Meta Enterprise Platform?", "It's a new Meta business line, launched September 28, 2026, to help businesses use AI. It will initially bring Meta's technology stack, including the Muse agent, Meta Business Agent, Muse API and Muse Code, to businesses and developers."),
+    ("Who leads Meta Enterprise Platform?", "Chirantan \"CJ\" Desai, formerly CEO and President of MongoDB, joined Meta as Chief Enterprise Platform Officer, reporting directly to Mark Zuckerberg."),
+    ("How much does Meta Enterprise Platform cost?", "Meta's announcement didn't include pricing or availability dates."),
+  ],
+  "body": """
+<p>Meta wants to sell businesses the same AI that powers its apps. On September 28, the company <a href="https://about.fb.com/news/2026/09/launching-meta-enterprise-platform/" rel="noopener">launched Meta Enterprise Platform</a>, a new business line built around AI for companies.</p>
+
+<h2>What happened</h2>
+<p>Mark Zuckerberg framed it as a big bet: "Today we are starting the next major pillar of our business, Meta Enterprise Platform, to help businesses use AI to grow and transform in new ways as well."</p>
+<p>He pointed to what Meta already has: "Meta Enterprise Platform will use our strengths that few other companies have: advanced models, leading agents, large-scale infrastructure, and years of working closely with many businesses." Meta says it already helps hundreds of millions of businesses reach customers.</p>
+
+<h2>The details</h2>
+<p>Meta says the platform will initially focus on bringing its full technology stack, including the Muse agent, Meta Business Agent, Muse API, Muse Code and more, to businesses and developers.</p>
+<p>To run it, Meta hired Chirantan "CJ" Desai as Chief Enterprise Platform Officer, reporting directly to Zuckerberg. Desai was CEO and President of MongoDB, previously led product and engineering at Cloudflare, and spent nearly eight years at ServiceNow, including as President and COO. "Our goal is to make Meta the place enterprises come to scale their businesses," Desai said.</p>
+<p>The move rippled beyond Meta. MongoDB's shares dropped more than 17% on the news of Desai's departure, and Dev Ittycheria was appointed interim CEO, <a href="https://techcrunch.com/2026/09/28/meta-launches-enterprise-ai-platform-hires-mongodb-ceo-to-lead-new-initiative/" rel="noopener">TechCrunch</a> reported.</p>
+<p>What's not in the announcement: pricing, availability dates, or a timeline for specific products.</p>
+
+<h2>Why brands should care</h2>
+<p>Most brands know Meta as the place they buy ads. This is Meta saying it wants to be the place they run AI too, using agents it has already built for its own apps. A day later, Meta showed what that looks like at the small end with <a href="/news/muse-small-business/">Muse for Small Business</a>.</p>
+<p>For marketers, the practical question is how much of your workflow ends up inside one company's ecosystem: your audience, your ads, and now potentially your AI tools.</p>
+
+<h2>What to do</h2>
+<ol>
+<li><strong>Don't change plans yet.</strong> There's no pricing or launch date. Treat this as direction, not a product.</li>
+<li><strong>Try Muse first.</strong> It's the piece you can use today, and the best preview of what Meta's business AI can and can't do.</li>
+<li><strong>Map your data.</strong> Know which of your accounts and tools you'd be comfortable connecting to any AI agent, Meta's or otherwise.</li>
+<li><strong>Watch for developer access.</strong> If your team builds tools, Muse API and Muse Code are the names to follow.</li>
+</ol>
+
+<h2>Sources</h2>
+<ul>
+<li><a href="https://about.fb.com/news/2026/09/launching-meta-enterprise-platform/" rel="noopener">Meta: Launching Meta Enterprise Platform</a></li>
+<li><a href="https://techcrunch.com/2026/09/28/meta-launches-enterprise-ai-platform-hires-mongodb-ceo-to-lead-new-initiative/" rel="noopener">TechCrunch: Meta launches enterprise AI platform, hires MongoDB CEO</a></li>
+<li><a href="https://siliconangle.com/2026/09/28/meta-hires-mongodb-ceo-cj-desai-to-lead-new-enterprise-ai-business/" rel="noopener">SiliconANGLE: Meta hires MongoDB CEO CJ Desai</a></li>
+<li><a href="https://about.fb.com/news/2026/09/the-biggest-news-from-connect-2026/" rel="noopener">Meta: The biggest news from Connect 2026 (photo)</a></li>
+</ul>
+"""
+},
+{
   "slug": "musk-ad-error",
   "cat": "platforms",
   "cat_label": "Platforms",
@@ -300,6 +407,8 @@ ARTICLES = [
 },
 {
   "slug": "agency-vs-in-house",
+  "image": "agency-vs-in-house.jpg",
+  "image_credit": "Illustration: Engage Era",
   "cat": "guides",
   "cat_label": "Guides",
   "date": "2026-09-29",
@@ -371,6 +480,8 @@ ARTICLES = [
 },
 {
   "slug": "founder-brand-without-cringe",
+  "image": "founder-brand-without-cringe.jpg",
+  "image_credit": "Illustration: Engage Era",
   "cat": "guides",
   "cat_label": "Guides",
   "date": "2026-09-29",
