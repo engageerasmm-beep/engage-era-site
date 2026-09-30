@@ -60,6 +60,7 @@ def page(path, title, desc, body, *, depth, active="", schema=None, noindex=Fals
 <meta property="og:image" content="{SITE}/assets/{og}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#060819">
+<meta name="author" content="Ben Meller">
 <link rel="icon" href="{up}assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
