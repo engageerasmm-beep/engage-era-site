@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engage Era Brand Film</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  :root {
+    color-scheme: dark;
+    --night: #060819; --navy: #0b0f2e; --panel: #11163d; --line: #232a5c;
+    --blue: #1466ff; --sky: #5aaee6; --red: #e4262c; --white: #f4f5fa; --mute: #9aa1c2;
+    --display: "Anton", Impact, "Arial Narrow", sans-serif;
+    --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --mono: "IBM Plex Mono", Menlo, monospace;
+  }
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  body { font-family: var(--body); color: var(--white); }
+  #frame { position: fixed; inset: 0; overflow: hidden; }
+  #stage { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; background: var(--night); overflow: hidden; transform-origin: 0 0; }
+  .scene { position: absolute; inset: 0; opacity: 0; }
+  .abs { position: absolute; }
+  .r { color: var(--red); }
+  .display { font-family: var(--display); text-transform: uppercase; line-height: .92; letter-spacing: .005em; }
+  .mono { font-family: var(--mono); letter-spacing: .16em; text-transform: uppercase; }
+  .kicker { display: flex; align-items: center; gap: 18px; font-family: var(--mono); font-size: 26px; letter-spacing: .2em; text-transform: uppercase; color: var(--mute); }
+  .kicker::before { content: ""; width: 44px; height: 4px; background: var(--red); }
+  .glow { position: absolute; border-radius: 50%; filter: blur(140px); pointer-events: none; }
+
+  /* S1 breaking */
+  #ticker { position: absolute; left: 0; right: 0; top: 0; height: 64px; background: var(--red); display: flex; align-items: center; overflow: hidden; }
+  #ticker b { background: var(--white); color: var(--red); height: 100%; display: grid; place-items: center; padding: 0 28px; font-family: var(--mono); font-weight: 500; font-size: 24px; letter-spacing: .16em; flex: none; z-index: 2; }
+  #ticker .track { display: flex; gap: 80px; white-space: nowrap; padding-left: 40px; font-family: var(--mono); font-size: 24px; letter-spacing: .1em; }
+  .flash { position: absolute; left: 140px; right: 140px; top: 50%; transform: translateY(-50%); font-size: 150px; opacity: 0; }
+  .flash small { display: block; font-family: var(--mono); font-size: 26px; letter-spacing: .2em; color: var(--mute); margin-bottom: 30px; }
+
+  /* S2 cover */
+  .line { overflow: hidden; }
+  .line > div { will-change: transform; }
+  #postsRow { position: absolute; top: 300px; left: 0; display: flex; gap: 40px; transform: rotate(-6deg); }
+  #postsRow img { width: 360px; height: 450px; object-fit: cover; border-radius: 14px; box-shadow: 0 40px 80px rgba(0,0,0,.6); }
+
+  /* S3 newsroom mock */
+  #site { position: absolute; left: 260px; top: 150px; width: 1400px; height: 820px; background: var(--night); border: 2px solid var(--line); border-radius: 20px; overflow: hidden; box-shadow: 0 60px 140px rgba(0,0,0,.7); }
+  #site .bar { height: 44px; background: var(--red); display: flex; align-items: center; font-family: var(--mono); font-size: 16px; letter-spacing: .12em; gap: 30px; padding-left: 0; overflow: hidden; white-space: nowrap; }
+  #site .bar b { background: var(--white); color: var(--red); height: 100%; display: grid; place-items: center; padding: 0 16px; font-weight: 500; }
+  #site .mast { display: flex; align-items: center; justify-content: space-between; padding: 22px 40px; border-bottom: 1px solid var(--line); }
+  #site .brand { display: flex; align-items: center; gap: 14px; font-family: var(--display); font-size: 32px; letter-spacing: .03em; }
+  #site .brand svg { width: 64px; height: 28px; }
+  #site nav { display: flex; gap: 34px; font-weight: 600; font-size: 18px; color: var(--mute); }
+  #site .btn { background: var(--red); padding: 12px 20px; border-radius: 6px; font-weight: 700; font-size: 17px; }
+  #site .body { display: grid; grid-template-columns: 300px 1fr 360px; gap: 36px; padding: 36px 40px; }
+  #site .body img { width: 300px; height: 375px; object-fit: cover; border-radius: 10px; }
+  #site .lead { display: grid; align-content: start; gap: 18px; }
+  #site .lead h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 64px; line-height: .95; text-transform: uppercase; }
+  #site .lead p { color: var(--mute); font-size: 20px; margin: 0; }
+  #site .latest { border-top: 4px solid var(--white); }
+  #site .latest h2 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 30px; padding: 14px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; }
+  #site .latest h2 span { font-family: var(--mono); font-size: 14px; color: var(--red); letter-spacing: .1em; }
+  #site .item { padding: 16px 0; border-bottom: 1px solid var(--line); font-weight: 600; font-size: 19px; line-height: 1.3; }
+  #site .item i { display: block; font-style: normal; font-family: var(--mono); font-size: 13px; color: var(--mute); letter-spacing: .14em; margin-bottom: 6px; }
+
+  /* S4 build */
+  #s4 { background: var(--red); }
+  #s4 .display { color: var(--night); }
+
+  /* S5 services */
+  .svc { position: absolute; inset: 0; opacity: 0; }
+  .svc .bg { position: absolute; right: 0; top: 0; width: 900px; height: 1080px; background-size: 215% auto; background-position: 50% 6%; background-repeat: no-repeat; -webkit-mask-image: linear-gradient(180deg, #000 50%, transparent 92%); mask-image: linear-gradient(180deg, #000 50%, transparent 92%); }
+  .svc .shade { position: absolute; inset: 0; background: linear-gradient(90deg, var(--night) 48%, rgba(6,8,25,.4) 70%, rgba(6,8,25,.1)); }
+  .svc .num { position: absolute; left: 140px; top: 190px; font-family: var(--display); font-size: 220px; color: transparent; -webkit-text-stroke: 3px var(--line); }
+  .svc .copy { position: absolute; left: 140px; top: 470px; width: 1000px; display: grid; gap: 30px; }
+  .svc .copy .display { font-size: 130px; }
+  .svc .copy p { margin: 0; font-size: 34px; color: var(--mute); max-width: 820px; }
+
+  .svc .abstract { background: radial-gradient(circle at 60% 40%, color-mix(in srgb, var(--hue) 55%, transparent) 0, transparent 60%), radial-gradient(circle at 30% 80%, #12246e 0, transparent 55%); display: grid; place-items: center; -webkit-mask-image: none; mask-image: none; }
+  .svc .abstract svg { width: 520px; height: 227px; opacity: .22; }
+  /* S6 brands */
+  #brands { position: absolute; left: 140px; right: 140px; top: 330px; display: flex; flex-wrap: wrap; gap: 26px 60px; }
+  #brands span { font-family: var(--display); text-transform: uppercase; font-size: 110px; line-height: 1; display: inline-block; }
+  #brands span.sl { color: var(--blue); }
+
+  /* S8 logo */
+  #mark { position: absolute; left: 50%; top: 330px; width: 520px; height: 227px; margin-left: -260px; }
+  #word { position: absolute; left: 0; right: 0; top: 610px; text-align: center; font-size: 150px; letter-spacing: .04em; }
+  #tag { position: absolute; left: 0; right: 0; top: 800px; text-align: center; font-size: 30px; }
+  #cta { position: absolute; left: 50%; top: 880px; transform: translateX(-50%); display: flex; align-items: center; gap: 22px; font-family: var(--mono); font-size: 26px; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
+  #cta b { background: var(--red); color: var(--white); padding: 16px 26px; border-radius: 6px; font-weight: 500; }
+
+  /* controls */
+  #ui { position: fixed; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: linear-gradient(transparent, rgba(0,0,0,.8)); font: 13px/1 var(--mono); color: var(--mute); z-index: 10; }
+  #ui button { font: 600 13px var(--body); background: var(--white); color: var(--night); border: 0; border-radius: 4px; padding: 8px 14px; cursor: pointer; }
+  #ui button:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
+  #prog { flex: 1; height: 4px; background: rgba(255,255,255,.2); border-radius: 99px; overflow: hidden; cursor: pointer; }
+  #prog i { display: block; height: 100%; width: 0; background: var(--red); }
+  body.rec #ui { display: none; }
+  body.rec { cursor: none; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="eeg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5aaee6"/><stop offset="1" stop-color="#1466ff"/></linearGradient></defs></svg>
+
+<div id="frame"><div id="stage">
+
+  <!-- S1: breaking -->
+  <section class="scene" id="s1">
+    <div class="glow" style="width:900px;height:900px;left:900px;top:-200px;background:#1a2f8a;opacity:.6"></div>
+    <div id="ticker"><b>BREAKING</b><div class="track" id="tickTrack">
+      <span>META JUST PUT A PRICE TAG ON THE FEATURES BUSINESSES WANT MOST</span><span>EVERY BIG APP REFUSED THE MUSK MOVIE AD</span><span>META'S MUSE AI JUST LEARNED HOW TO MANAGE YOUR INSTAGRAM</span><span>GOOGLE JUST TURNED VERTICAL VIDEO INTO ONE BUY</span>
+      <span>META JUST PUT A PRICE TAG ON THE FEATURES BUSINESSES WANT MOST</span><span>EVERY BIG APP REFUSED THE MUSK MOVIE AD</span>
+    </div></div>
+    <div class="flash display"><small>— Platforms</small>Meta just put a <span class="r">price tag</span> on the features businesses want most</div>
+    <div class="flash display"><small>— Platforms</small>Every big app refused the Musk movie ad. Then Meta called it an <span class="r">error</span></div>
+    <div class="flash display"><small>— AI</small>Meta's Muse AI just learned how to <span class="r">manage</span> your Instagram</div>
+    <div class="flash display"><small>— Platforms</small>Google just turned vertical video into <span class="r">one buy</span></div>
+  </section>
+
+  <!-- S2: every day we cover what works -->
+  <section class="scene" id="s2">
+    <div class="glow" style="width:1100px;height:900px;left:-300px;top:300px;background:#12246e;opacity:.7"></div>
+    <div id="postsRow">
+      <img src="assets/meta-price-tag.jpg" alt=""><img src="assets/musk-ad-error.jpg" alt=""><img src="assets/muse-instagram-manager.jpg" alt=""><img src="assets/google-vertical-video.jpg" alt=""><img src="assets/bloom-founder.jpg" alt=""><img src="assets/meta-same-ad.jpg" alt=""><img src="assets/what-is-aeo.jpg" alt=""><img src="assets/founder-led-content.jpg" alt="">
+    </div>
+    <div class="abs" id="s2shade" style="inset:0;background:linear-gradient(0deg,var(--night) 12%,rgba(6,8,25,.2) 60%)"></div>
+    <div class="abs" style="left:140px;bottom:120px">
+      <div class="line"><div class="display" style="font-size:180px">Every day,</div></div>
+      <div class="line"><div class="display" style="font-size:180px">we cover</div></div>
+      <div class="line"><div class="display" style="font-size:180px"><span class="r">what works.</span></div></div>
+    </div>
+  </section>
+
+  <!-- S3: the newsroom -->
+  <section class="scene" id="s3">
+    <div class="glow" style="width:1200px;height:900px;left:360px;top:100px;background:#1466ff;opacity:.25"></div>
+    <div id="site">
+      <div class="bar"><b>LATEST</b><span>EVERY BIG APP REFUSED THE MUSK MOVIE AD</span><span>META'S AD ENGINE SEES LOOKALIKE CREATIVES AS THE SAME AD</span><span>MUSE AI + INSTAGRAM</span></div>
+      <div class="mast">
+        <div class="brand"><svg viewBox="0 0 670 293" aria-hidden="true"><g fill="url(#eeg)"><path d="M51 0H346L297 67H39Z"/><path d="M31 117H261L216 176H20Z"/><path d="M11 227H247L420 0H670L658 67H440L269 293H0Z"/><path d="M466 117H650L640 176H422Z"/><path d="M389 227H631L620 293H342Z"/></g></svg>ENGAGE ERA</div>
+        <nav><span>News</span><span>The Brief</span><span>Studio</span><span>Founder</span></nav>
+        <div class="btn">Work with us</div>
+      </div>
+      <div class="body">
+        <img src="assets/musk-ad-error.jpg" alt="">
+        <div class="lead">
+          <div class="kicker" style="font-size:15px">Platforms</div>
+          <h1>Every big app refused the Musk movie ad. Then Meta called it an <span class="r">error</span></h1>
+          <p>The real story is how automated ad review works, and what to do when it blocks you.</p>
+        </div>
+        <div class="latest">
+          <h2>Latest <span>● LIVE</span></h2>
+          <div class="item"><i>— Platforms</i>Meta's ad engine sees lookalike creatives as the same ad</div>
+          <div class="item"><i>— AI</i>Meta's Muse AI just learned how to manage your Instagram</div>
+          <div class="item"><i>— Platforms</i>Google just turned vertical video into one buy</div>
+          <div class="item"><i>— Founder stories</i>The founder of Bloom says this is why they blew up</div>
+        </div>
+      </div>
+    </div>
+    <div class="abs mono" id="url" style="left:260px;top:90px;font-size:24px;color:var(--mute)">eesmm.com</div>
+  </section>
+
+  <!-- S4: then we build it -->
+  <section class="scene" id="s4">
+    <div class="abs" style="left:140px;top:250px">
+      <div class="line"><div class="display" style="font-size:120px">Then</div></div>
+      <div class="line"><div class="display" style="font-size:300px;color:var(--white)">we build it.</div></div>
+    </div>
+  </section>
+
+  <!-- S5: services -->
+  <section class="scene" id="s5">
+    <div class="svc"><div class="bg" style="background-image:url(assets/founder-led-content.jpg)"></div><div class="shade"></div><div class="num">01</div><div class="copy"><div class="kicker">Strategy</div><div class="display">Know exactly what to <span class="r">post</span></div><p>Brand Blueprints, positioning and 90-day plans.</p></div></div>
+    <div class="svc"><div class="bg abstract" style="--hue:#1466ff"><!-- FOOTAGE SLOT: replace with Ben's real work --><svg viewBox="0 0 670 293" aria-hidden="true"><g fill="url(#eeg)"><path d="M51 0H346L297 67H39Z"/><path d="M31 117H261L216 176H20Z"/><path d="M11 227H247L420 0H670L658 67H440L269 293H0Z"/><path d="M466 117H650L640 176H422Z"/><path d="M389 227H631L620 293H342Z"/></g></svg></div><div class="shade"></div><div class="num">02</div><div class="copy"><div class="kicker">Content</div><div class="display">Content people <span class="r">stop</span> for</div><p>Shoots, edits, reels and founder content.</p></div></div>
+    <div class="svc"><div class="bg abstract" style="--hue:#5aaee6"><!-- FOOTAGE SLOT: replace with Ben's real work --><svg viewBox="0 0 670 293" aria-hidden="true"><g fill="url(#eeg)"><path d="M51 0H346L297 67H39Z"/><path d="M31 117H261L216 176H20Z"/><path d="M11 227H247L420 0H670L658 67H440L269 293H0Z"/><path d="M466 117H650L640 176H422Z"/><path d="M389 227H631L620 293H342Z"/></g></svg></div><div class="shade"></div><div class="num">03</div><div class="copy"><div class="kicker">Social</div><div class="display">Run like a <span class="r">newsroom</span></div><p>Full social management, community and organic growth.</p></div></div>
+    <div class="svc"><div class="bg abstract" style="--hue:#e4262c"><!-- FOOTAGE SLOT: replace with Ben's real work --><svg viewBox="0 0 670 293" aria-hidden="true"><g fill="url(#eeg)"><path d="M51 0H346L297 67H39Z"/><path d="M31 117H261L216 176H20Z"/><path d="M11 227H247L420 0H670L658 67H440L269 293H0Z"/><path d="M466 117H650L640 176H422Z"/><path d="M389 227H631L620 293H342Z"/></g></svg></div><div class="shade"></div><div class="num">04</div><div class="copy"><div class="kicker">Paid</div><div class="display">Ads built to <span class="r">perform</span></div><p>Meta and TikTok campaigns, creative and launches.</p></div></div>
+    <div class="svc"><div class="bg" style="background-image:url(assets/what-is-aeo.jpg)"></div><div class="shade"></div><div class="num">05</div><div class="copy"><div class="kicker">Search</div><div class="display">Found on Google <span class="r">and AI</span></div><p>SEO and AEO content that gets you recommended.</p></div></div>
+  </section>
+
+  <!-- S6: brands -->
+  <section class="scene" id="s6">
+    <div class="glow" style="width:1000px;height:800px;left:800px;top:300px;background:#12246e;opacity:.7"></div>
+    <div class="abs" style="left:140px;top:210px"><div class="kicker">Brands we've created for</div></div>
+    <div id="brands">
+      <span>SoFi</span><span class="sl">/</span><span>Oil Nut Bay</span><span class="sl">/</span><span>Good Molecules</span><span class="sl">/</span><span>Rise Above</span><span class="sl">/</span><span>Rome</span><span class="sl">/</span><span>Better Life Work</span><span class="sl">/</span><span>Beardy Brandon</span>
+    </div>
+  </section>
+
+  <!-- S7: founder -->
+  <section class="scene" id="s7">
+    <div class="glow" style="width:1100px;height:1000px;left:-200px;top:-200px;background:#2a2f55;opacity:.9"></div>
+    <div class="abs" style="left:140px;top:300px;display:grid;gap:26px">
+      <div class="kicker">Founded by</div>
+      <div class="line"><div class="display" style="font-size:260px">Ben Meller</div></div>
+      <div class="line"><div class="display r" style="font-size:90px">The entrepreneur's entrepreneur.</div></div>
+    </div>
+  </section>
+
+  <!-- S8: logo -->
+  <section class="scene" id="s8">
+    <div class="glow" style="width:1200px;height:800px;left:360px;top:150px;background:#1466ff;opacity:.28"></div>
+    <svg id="mark" viewBox="0 0 670 293" aria-label="Engage Era logo"><g fill="url(#eeg)">
+      <path class="p" d="M51 0H346L297 67H39Z"/><path class="p" d="M31 117H261L216 176H20Z"/><path class="p" d="M11 227H247L420 0H670L658 67H440L269 293H0Z"/><path class="p" d="M466 117H650L640 176H422Z"/><path class="p" d="M389 227H631L620 293H342Z"/>
+    </g></svg>
+    <div id="word" class="display">Engage Era</div>
+    <div id="tag" class="mono" style="color:var(--mute)">Marketing news. Before it's news.</div>
+    <div id="cta"><b>Apply</b><span>eesmm.com/studio</span></div>
+  </section>
+
+</div></div>
+
+<div id="ui"><button id="play" type="button">Play</button><div id="prog" title="Scrub"><i></i></div><span id="time">0.0s</span></div>
+
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var rec = params.has('record');
+  if (rec) document.body.classList.add('rec');
+
+  // Fit the 1920x1080 stage to the window.
+  var stage = document.getElementById('stage');
+  function fit() { var s = Math.min(innerWidth / 1920, innerHeight / 1080); stage.style.transform = 'scale(' + s + ') translate(-50%, -50%)'; }
+  addEventListener('resize', fit); fit();
+
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
+
+  function show(id, at) { tl.set('#' + id, { opacity: 1 }, at); }
+  function hide(id, at) { tl.set('#' + id, { opacity: 0 }, at); }
+
+  // S1 BREAKING (0 - 5.4)
+  show('s1', 0);
+  tl.fromTo('#ticker', { yPercent: -100 }, { yPercent: 0, duration: .45 }, .1);
+  tl.fromTo('#tickTrack', { x: 0 }, { x: -1400, duration: 6, ease: 'none' }, .1);
+  $$('#s1 .flash').forEach(function (el, i) {
+    var t = .7 + i * 1.12;
+    tl.fromTo(el, { opacity: 0, scale: 1.06, x: -30 }, { opacity: 1, scale: 1, x: 0, duration: .16, ease: 'power4.out' }, t);
+    tl.to(el, { x: 8, duration: .04, yoyo: true, repeat: 3, ease: 'none' }, t + .5);
+    tl.to(el, { opacity: 0, duration: .08 }, t + .98);
+  });
+  tl.fromTo('#stage', { backgroundColor: '#060819' }, { backgroundColor: '#e4262c', duration: .06, yoyo: true, repeat: 1 }, 5.2);
+  hide('s1', 5.4);
+
+  // S2 EVERY DAY WE COVER WHAT WORKS (5.4 - 11)
+  show('s2', 5.4);
+  tl.fromTo('#postsRow', { x: 700 }, { x: -1900, duration: 6, ease: 'none' }, 5.4);
+  $$('#s2 .line > div').forEach(function (el, i) {
+    tl.fromTo(el, { yPercent: 105 }, { yPercent: 0, duration: .6 }, 5.9 + i * .35);
+  });
+  tl.to('#s2 .line > div', { yPercent: -105, duration: .45, ease: 'power3.in', stagger: .06 }, 10.4);
+  hide('s2', 11);
+
+  // S3 NEWSROOM (11 - 15.2)
+  show('s3', 11);
+  tl.fromTo('#site', { y: 260, rotateX: 18, opacity: 0, transformPerspective: 1600 }, { y: 0, rotateX: 0, opacity: 1, duration: .9 }, 11);
+  tl.fromTo('#url', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .4 }, 11.4);
+  tl.fromTo('#site .item', { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: .35, stagger: .15 }, 11.8);
+  tl.to('#site', { scale: 1.9, x: -120, y: 380, duration: 1.4, ease: 'power2.inOut' }, 13.4);
+  tl.to('#s3', { opacity: 0, duration: .2 }, 15);
+
+  // S4 THEN WE BUILD IT (15.2 - 18.2)
+  show('s4', 15.2);
+  tl.fromTo('#s4', { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: .35, ease: 'power4.inOut' }, 15.2);
+  $$('#s4 .line > div').forEach(function (el, i) {
+    tl.fromTo(el, { yPercent: 105 }, { yPercent: 0, duration: .55 }, 15.5 + i * .3);
+  });
+  tl.to('#s4', { clipPath: 'inset(100% 0 0 0)', duration: .35, ease: 'power4.inOut' }, 17.9);
+  hide('s4', 18.25);
+
+  // S5 SERVICES (18.2 - 28.2), 2s each
+  show('s5', 18.2);
+  $$('#s5 .svc').forEach(function (el, i) {
+    var t = 18.2 + i * 2;
+    tl.set(el, { opacity: 1 }, t);
+    tl.fromTo($('.bg', el), { scale: 1.15, xPercent: 8 }, { scale: 1, xPercent: 0, duration: 2.2, ease: 'power2.out' }, t);
+    tl.fromTo($('.num', el), { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: .4 }, t + .05);
+    tl.fromTo($('.kicker', el), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .35 }, t + .1);
+    tl.fromTo($('.display', el), { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: .45 }, t + .18);
+    tl.fromTo($('p', el), { opacity: 0 }, { opacity: 1, duration: .4 }, t + .4);
+    tl.set(el, { opacity: 0 }, t + 2);
+  });
+  hide('s5', 28.2);
+
+  // S6 BRANDS (28.2 - 33.4)
+  show('s6', 28.2);
+  tl.fromTo('#s6 .kicker', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: .4 }, 28.3);
+  tl.fromTo('#brands span', { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: .28, ease: 'back.out(2)', stagger: .22 }, 28.6);
+  tl.to('#brands', { y: -30, duration: 5, ease: 'none' }, 28.2);
+  tl.to('#s6', { opacity: 0, duration: .25 }, 33.2);
+
+  // S7 FOUNDER (33.4 - 37.4)
+  show('s7', 33.45);
+  tl.fromTo('#s7 .kicker', { opacity: 0 }, { opacity: 1, duration: .4 }, 33.5);
+  $$('#s7 .line > div').forEach(function (el, i) {
+    tl.fromTo(el, { yPercent: 105 }, { yPercent: 0, duration: .6 }, 33.7 + i * .45);
+  });
+  tl.to('#s7', { opacity: 0, duration: .3 }, 37.1);
+
+  // S8 LOGO (37.4 - 44)
+  show('s8', 37.4);
+  tl.fromTo('#mark .p', { x: -160, opacity: 0 }, { x: 0, opacity: 1, duration: .5, stagger: .09, ease: 'power4.out' }, 37.5);
+  tl.fromTo('#word', { opacity: 0, letterSpacing: '.4em' }, { opacity: 1, letterSpacing: '.04em', duration: .8 }, 38.2);
+  tl.fromTo('#tag', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .5 }, 39);
+  tl.fromTo('#cta', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .5 }, 39.8);
+  tl.to({}, { duration: 3.2 }, 40.3);
+
+  // Controls
+  var btn = $('#play'), bar = $('#prog i'), tm = $('#time');
+  tl.eventCallback('onUpdate', function () { bar.style.width = (tl.progress() * 100) + '%'; tm.textContent = tl.time().toFixed(1) + 's / ' + tl.duration().toFixed(0) + 's'; });
+  tl.eventCallback('onComplete', function () { btn.textContent = 'Replay'; });
+  btn.addEventListener('click', function () {
+    if (tl.progress() === 1) { tl.restart(); btn.textContent = 'Pause'; return; }
+    if (tl.paused()) { tl.play(); btn.textContent = 'Pause'; } else { tl.pause(); btn.textContent = 'Play'; }
+  });
+  $('#prog').addEventListener('click', function (e) {
+    var r = e.currentTarget.getBoundingClientRect(); tl.progress((e.clientX - r.left) / r.width).pause(); btn.textContent = 'Play';
+  });
+  addEventListener('keydown', function (e) { if (e.code === 'Space') { e.preventDefault(); btn.click(); } });
+
+  var start = function () { tl.play(0); btn.textContent = 'Pause'; };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { setTimeout(start, rec ? 1500 : 400); });
+  else setTimeout(start, 800);
+  window.__tl = tl;
+})();
+</script>
+</body>
+</html>
