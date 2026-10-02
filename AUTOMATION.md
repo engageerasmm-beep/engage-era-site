@@ -44,6 +44,7 @@ e. Add each published folder ID to `src/processed.json` → `published`. Add hel
 - If nothing new passed, don't push. Still update `held` if needed (commit locally).
 - Otherwise: `git add -A && git commit -m "Publish: <slugs>"` (end the message with `Co-Authored-By: Claude <noreply@anthropic.com>`), then `git push origin main`.
 - Wait ~90 seconds, then confirm with curl that `https://eesmm.com/news/<slug>/` returns 200. Report if not.
+- Then ping Bing via IndexNow: `python3 src/indexnow.py https://eesmm.com/ https://eesmm.com/news/ https://eesmm.com/news/<slug>/ …` (one URL per new article). Report if it doesn't print HTTP 200 or 202.
 
 ## 5. Report to Ben
 Send one short notification (PushNotification if available), e.g.:
