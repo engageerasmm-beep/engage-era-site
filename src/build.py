@@ -3,6 +3,11 @@ import json, os, re, datetime, html, hashlib
 from articles import ARTICLES, INSTAGRAM
 
 SITE = "https://eesmm.com"
+# Google Analytics 4 (property "eesmm.com" in the engageerasmm@gmail.com account). Left off noindex pages.
+GA_ID = "G-TDJCPQLEHK"
+GA_TAG = (f'<script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>\n'
+          f"<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}"
+          f"gtag('js',new Date());gtag('config','{GA_ID}');</script>")
 IG = "https://www.instagram.com/engageeraco/"
 IG_BEN = "https://www.instagram.com/benmeller/"
 EMAIL = "ben@eesmm.com"
@@ -43,6 +48,7 @@ def page(path, title, desc, body, *, depth, active="", schema=None, noindex=Fals
     canonical = SITE + "/" + (path if path else "")
     ld = "".join(f'<script type="application/ld+json">{json.dumps(s, ensure_ascii=False)}</script>' for s in (schema or []))
     robots = '<meta name="robots" content="noindex, nofollow">' if noindex else ""
+    analytics = "" if noindex else GA_TAG
     current = ' aria-current="page"'
     nav = "".join(
         f'<a href="{up}{href}"{current if key == active else ""}>{label}</a>'
@@ -53,6 +59,7 @@ def page(path, title, desc, body, *, depth, active="", schema=None, noindex=Fals
 <html lang="en">
 <head>
 <meta charset="utf-8">
+{analytics}
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
