@@ -340,3 +340,65 @@ footer.site .legal .max { padding-block: 16px; display: flex; justify-content: s
 .lead.split h1 { font-size: clamp(32px, 3.4vw, 52px); }
 .article-head.split { align-items: center; }
 @media (max-width: 760px) { .lead.split { grid-template-columns: 1fr; } .lead.split .post { max-width: 360px; } }
+
+/* ---- Oct 3 fixes ---- */
+:root { --red-text: #ff5a5f; } /* red for small text on navy: passes WCAG AA */
+.side h2 span, .services .n { color: var(--red-text); }
+.fine, .brief p.lede { opacity: 1; }
+.post picture { display: block; width: 100%; height: 100%; }
+
+/* cards with a clean visual show their headline */
+.card-h { font-family: var(--display); font-weight: 400; text-transform: uppercase; font-size: 24px; line-height: 1.02; margin: 2px 0 0; }
+.card:hover .card-h { text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+
+/* homepage: two stories under the lead so both columns end together */
+.front { grid-template-columns: 1fr 340px; grid-template-rows: auto 1fr; }
+.front .lead { grid-column: 1; grid-row: 1; }
+.front .under { grid-column: 1; grid-row: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-content: start; padding-top: 12px; border-top: 1px solid var(--line); }
+.front .under .card .post { aspect-ratio: 4/5; }
+.front .side { grid-column: 2; grid-row: 1 / span 2; }
+.side .item.more h3 { color: var(--sky); }
+
+/* mobile menu */
+.menu-btn { display: none; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 6px; background: transparent; cursor: pointer; flex-direction: column; justify-content: center; align-items: center; gap: 5px; }
+.menu-btn i { display: block; width: 20px; height: 2px; background: var(--white); transition: transform .2s ease, opacity .2s ease; }
+.menu-btn[aria-expanded="true"] i:nth-child(2) { transform: translateY(7px) rotate(45deg); }
+.menu-btn[aria-expanded="true"] i:nth-child(3) { opacity: 0; }
+.menu-btn[aria-expanded="true"] i:nth-child(4) { transform: translateY(-7px) rotate(-45deg); }
+.mnav { border-top: 1px solid var(--line); padding: 8px 20px 20px; display: grid; gap: 0; }
+.mnav a { padding: 14px 0; border-bottom: 1px solid var(--line); font-family: var(--display); text-transform: uppercase; font-size: 26px; color: var(--white); }
+.mnav a[aria-current] { color: var(--sky); }
+.mnav .btn { margin-top: 16px; justify-content: center; font-family: var(--body); text-transform: none; font-size: 16px; padding: 14px 20px; border-bottom: 0; }
+
+/* founder + brief pages */
+.founder-grid .copy .lede-big { font-size: 22px; color: var(--white); line-height: 1.5; }
+.founder-grid .copy h2 { font-size: clamp(28px, 3vw, 38px); margin-top: 36px; }
+.brief-info { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+.plain-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 3px solid var(--white); }
+.plain-list li { padding: 14px 0; border-bottom: 1px solid var(--line); color: var(--mute); }
+.plain-list b { color: var(--white); }
+.sample { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 26px; display: grid; gap: 12px; }
+.sample-sub { color: var(--mute); font-size: 14px; }
+.sample ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 0; }
+.sample li { padding: 14px 0; border-bottom: 1px solid var(--line); display: grid; gap: 6px; }
+.sample li h3 { font-family: var(--body); text-transform: none; font-weight: 700; font-size: 18px; line-height: 1.3; }
+.sample li h3 a:hover { text-decoration: underline; text-decoration-color: var(--red); }
+.sample li p { color: var(--mute); font-size: 14px; }
+.sample-take { font-size: 15px; color: #cfd3e3; }
+
+@media (max-width: 980px) {
+  .menu-btn { display: inline-flex; }
+  .front { grid-template-columns: 1fr; grid-template-rows: none; }
+  .front .lead, .front .under, .front .side { grid-column: auto; grid-row: auto; }
+  .brief-info { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .split .post, .lead.split .post { max-width: none; width: 100%; }
+  .mast .max { gap: 12px; }
+  .mast-cta { display: none; }
+  .ticker { font-size: 11px; }
+  .ticker b { padding: 8px 10px; }
+}
+@media (max-width: 560px) {
+  .front .under { grid-template-columns: 1fr; }
+}

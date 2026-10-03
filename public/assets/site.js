@@ -6,6 +6,17 @@
   var d = document.getElementById('today');
   if (d) { try { d.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' }); } catch (e) {} }
 
+  // Mobile menu
+  var mb = document.querySelector('.menu-btn'), mn = document.getElementById('mnav');
+  if (mb && mn) {
+    mb.addEventListener('click', function () {
+      var open = mb.getAttribute('aria-expanded') !== 'true';
+      mb.setAttribute('aria-expanded', open ? 'true' : 'false');
+      mn.hidden = !open;
+    });
+    addEventListener('keydown', function (e) { if (e.key === 'Escape' && !mn.hidden) { mn.hidden = true; mb.setAttribute('aria-expanded', 'false'); mb.focus(); } });
+  }
+
   // Category filter chips
   var chips = document.querySelectorAll('.chip'), cards = document.querySelectorAll('[data-c]');
   chips.forEach(function (c) {

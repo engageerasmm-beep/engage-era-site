@@ -1,6 +1,9 @@
 """Builds the Engage Era site into ../public. Run: python3 src/build.py"""
 import json, os, re, datetime, html, hashlib
-from articles import ARTICLES, INSTAGRAM
+from articles import ARTICLES as _ARTICLES, INSTAGRAM
+
+# Newest first by packet date; the file order breaks ties.
+ARTICLES = sorted(_ARTICLES, key=lambda a: a["date"], reverse=True)
 
 SITE = "https://eesmm.com"
 # Google Analytics 4 (property "eesmm.com" in the engageerasmm@gmail.com account). Left off noindex pages.
@@ -37,10 +40,53 @@ def red(t):
     return t.replace("<r>", '<span class="r">').replace("</r>", "</span>")
 
 
-def cover(item, up):
-    """The story's Instagram post (saved from Grok) is its cover. Without one, a generated post in the same style."""
-    src = f"{up}assets/img/{item['image']}" if item.get("image") else f"{up}assets/posts/{item['slug']}.png"
-    return f'<img src="{src}" alt="{html.escape(plain(item["title"]))}" width="1080" height="1350" loading="lazy">'
+IMG_WIDTHS = (400, 720, 1080)
+
+
+def img_variants(rel):
+    """WebP copies of assets/<rel> at IMG_WIDTHS. The name carries a content hash, so they can be cached for a year."""
+    from PIL import Image
+    src = os.path.join(ROOT, "assets", rel)
+    with open(src, "rb") as f:
+        digest = hashlib.sha1(f.read()).hexdigest()[:8]
+    base = os.path.splitext(rel)[0].replace("/", "-")
+    with Image.open(src) as im:
+        im = im.convert("RGB")
+        w0, h0 = im.size
+        out = []
+        for w in IMG_WIDTHS:
+            name = f"w/{base}-{digest}-{w}.webp"
+            path = os.path.join(ROOT, "assets", name)
+            if not os.path.exists(path):
+                os.makedirs(os.path.dirname(path), exist_ok=True)
+                im.resize((w, round(h0 * w / w0)), Image.LANCZOS).save(path, "WEBP", quality=78, method=6)
+            out.append((name, w))
+    return out, (w0, h0)
+
+
+def picture(rel, up, alt, *, eager=False, sizes="(max-width: 760px) 92vw, 400px"):
+    """<picture> with a WebP srcset and the original as fallback. Only the first screen's image loads eagerly."""
+    variants, (w0, h0) = img_variants(rel)
+    srcset = ", ".join(f"{up}assets/{n} {w}w" for n, w in variants)
+    load = 'loading="eager" fetchpriority="high"' if eager else 'loading="lazy"'
+    return (f'<picture><source type="image/webp" srcset="{srcset}" sizes="{sizes}">'
+            f'<img src="{up}assets/{rel}" alt="{html.escape(alt)}" width="{w0}" height="{h0}" {load} decoding="async"></picture>')
+
+
+def cover_rel(item):
+    """The Instagram post (post.jpg from Grok): used for share images and as the fallback visual."""
+    return f"img/{item['image']}" if item.get("image") else f"posts/{item['slug']}.png"
+
+
+def hero_rel(item):
+    """The clean visual without baked-in text (from the story's v1 in Drive), if we have it."""
+    rel = f"img/hero/{item['slug']}.jpg"
+    return rel if os.path.exists(os.path.join(ROOT, "assets", rel)) else None
+
+
+def visual(item, up, *, eager=False, sizes="(max-width: 760px) 92vw, 400px"):
+    """Clean hero when available, otherwise the Instagram post."""
+    return picture(hero_rel(item) or cover_rel(item), up, plain(item["title"]), eager=eager, sizes=sizes)
 
 
 def page(path, title, desc, body, *, depth, active="", schema=None, noindex=False, og="og/default.png", word_extra=""):
@@ -75,6 +121,7 @@ def page(path, title, desc, body, *, depth, active="", schema=None, noindex=Fals
 <meta name="theme-color" content="#060819">
 <meta name="author" content="Ben Meller">
 <link rel="icon" href="{up}assets/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/rss+xml" title="Engage Era" href="{SITE}/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS}">
@@ -98,8 +145,10 @@ def masthead(date=True):
     <a class="brand" href="%UP%index.html" aria-label="Engage Era home">{MARK}<span class="word">Engage Era%WORD%</span></a>
     <nav class="main" aria-label="Main">%NAV%</nav>
     {d}
-    %CTA%
+    <span class="mast-cta">%CTA%</span>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mnav"><span class="sr">Menu</span><i></i><i></i><i></i></button>
   </div>
+  <nav class="mnav" id="mnav" aria-label="Menu" hidden>%NAV%%CTA%</nav>
 </header>"""
 
 
@@ -110,7 +159,7 @@ def footer():
       <a class="brand" href="%UP%index.html">{MARK}<span class="word">Engage Era</span></a>
       <p class="mute">Marketing news, before it's news. Plus a studio that builds what we cover. Based in Palm Beach, FL.</p>
     </div>
-    <div><h4>News</h4><ul><li><a href="%UP%news/index.html">All stories</a></li><li><a href="%UP%brief/index.html">The Brief</a></li><li><a href="{IG}" rel="noopener">@engageeraco</a></li></ul></div>
+    <div><h4>News</h4><ul><li><a href="%UP%news/index.html">All stories</a></li><li><a href="%UP%brief/index.html">The Brief</a></li><li><a href="{IG}" rel="noopener">@engageeraco</a></li><li><a href="%UP%feed.xml">RSS feed</a></li></ul></div>
     <div><h4>Studio</h4><ul><li><a href="%UP%studio/index.html">Services</a></li><li><a href="%UP%studio/index.html#process">Process</a></li><li><a href="%UP%studio/index.html#apply">Apply</a></li></ul></div>
     <div><h4>Company</h4><ul><li><a href="%UP%founder/index.html">Founder</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="{IG_BEN}" rel="noopener">@benmeller</a></li></ul></div>
   </div>
@@ -138,9 +187,10 @@ def brief_band(depth_note=""):
 
 
 def article_card(a, up):
+    hcls = "card-h" if hero_rel(a) else "sr"
     return f"""<a class="card" data-c="{a['cat']}" href="{up}news/{a['slug']}/index.html">
-  <div class="post">{cover(a, up)}</div>
-  <h3 class="sr">{plain(a['title'])}</h3>
+  <div class="post">{visual(a, up, sizes="(max-width: 560px) 92vw, (max-width: 980px) 45vw, 380px")}</div>
+  <h3 class="{hcls}">{red(a['title'])}</h3>
   <span class="meta">{a['cat_label']} · {fmt_date(a['date'])} · {a['read']}</span>
   <p>{a['dek']}</p>
 </a>"""
@@ -148,7 +198,7 @@ def article_card(a, up):
 
 def ig_card(s):
     return f"""<a class="card ig" data-c="{s['cat']}" href="{IG}" rel="noopener">
-  <div class="post">{cover(s, "%UP%")}</div>
+  <div class="post">{picture(cover_rel(s), "%UP%", plain(s["title"]))}</div>
   <h3 class="sr">{plain(s['title'])}</h3>
   <span class="meta">{s['cat_label']} · On Instagram</span>
 </a>"""
@@ -171,12 +221,12 @@ def write(rel, content):
 # ---------- Home ----------
 def build_home():
     up = ""
-    lead, rest = ARTICLES[0], ARTICLES[1:]
+    lead, under, rest = ARTICLES[0], ARTICLES[1:3], ARTICLES[3:]
     ticker_items = [plain(a["title"]) for a in ARTICLES] + [plain(s["title"]) for s in INSTAGRAM] + ["The Brief: marketing news three times a week"]
     track = "".join(f"<span>{t}</span>" for t in ticker_items) * 2
     latest = "".join(
         f'<a class="item" href="news/{a["slug"]}/index.html"><span class="t">{datetime.date.fromisoformat(a["date"]).strftime("%b %-d")}</span><div><span class="kicker">{a["cat_label"]}</span><h3>{plain(a["title"])}</h3></div></a>'
-        for a in ARTICLES
+        for a in ARTICLES[:6]
     ) + "".join(
         f'<a class="item" href="{IG}" rel="noopener"><span class="t">IG</span><div><span class="kicker">{s["cat_label"]}</span><h3>{plain(s["title"])}</h3></div></a>' for s in INSTAGRAM
     )
@@ -188,7 +238,7 @@ def build_home():
   <div class="gut">
     <div class="max front">
       <article class="lead split">
-        <a href="news/{lead['slug']}/index.html" class="post" tabindex="-1">{cover(lead, up)}</a>
+        <a href="news/{lead['slug']}/index.html" class="post" tabindex="-1">{visual(lead, up, eager=True, sizes="(max-width: 760px) 100vw, 300px")}</a>
         <div class="lead-copy">
           <span class="kicker">{lead['cat_label']}</span>
           <h1><a href="news/{lead['slug']}/index.html">{red(lead['title'])}</a></h1>
@@ -196,9 +246,11 @@ def build_home():
           <div class="byline"><b>Ben Meller</b><span>·</span><span>{fmt_date(lead['date'])}</span><span>·</span><span>{lead['read']}</span></div>
         </div>
       </article>
+      <div class="under">{"".join(article_card(a, up) for a in under)}</div>
       <aside class="side" aria-label="Latest">
         <h2>Latest <span>● Live</span></h2>
         {latest}
+        <a class="item more" href="news/index.html"><span class="t"></span><div><h3>All stories →</h3></div></a>
       </aside>
     </div>
   </div>
@@ -270,7 +322,7 @@ def build_articles():
   <div class="gut">
     <nav class="crumbs max" aria-label="Breadcrumb" style="max-width:880px"><a href="{up}index.html">Home</a><span>/</span><a href="{up}news/index.html">News</a><span>/</span><span>{a['cat_label']}</span></nav>
     <header class="article-head split">
-      <figure class="cover-fig"><div class="post">{cover(a, up)}</div>{f'<figcaption>{a["image_credit"]}</figcaption>' if a.get("image_credit") else ""}</figure>
+      <figure class="cover-fig"><div class="post">{visual(a, up, eager=True, sizes="(max-width: 760px) 100vw, 400px")}</div>{f'<figcaption>{a["image_credit"]}</figcaption>' if a.get("image_credit") else ""}</figure>
       <div class="lead-copy">
         <span class="kicker">{a['cat_label']}</span>
         <h1>{red(a['title'])}</h1>
@@ -292,15 +344,15 @@ def build_articles():
 </main>
 {footer()}"""
         schema = [{"@context": "https://schema.org", "@graph": [
-            {"@type": "NewsArticle", "headline": plain(a["title"]), "description": a["description"], "datePublished": a["date"], "dateModified": a["date"],
+            {"@type": "NewsArticle", "headline": plain(a["title"]), "description": a["description"], "datePublished": a["date"], "dateModified": a.get("updated", a["date"]),
              "author": {"@id": SITE + "/founder/#ben", "@type": "Person", "name": "Ben Meller", "url": SITE + "/founder/"},
-             "publisher": {"@id": SITE + "/#org"}, "mainEntityOfPage": SITE + "/" + path, "image": SITE + f"/assets/posts/{a['slug']}.png", "articleSection": a["cat_label"]},
+             "publisher": {"@id": SITE + "/#org"}, "mainEntityOfPage": SITE + "/" + path, "image": SITE + f"/assets/{cover_rel(a)}", "articleSection": a["cat_label"]},
             {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": ans}} for q, ans in a["faq"]]},
             {"@type": "BreadcrumbList", "itemListElement": [
                 {"@type": "ListItem", "position": 1, "name": "Home", "item": SITE + "/"},
                 {"@type": "ListItem", "position": 2, "name": "News", "item": SITE + "/news/"},
                 {"@type": "ListItem", "position": 3, "name": plain(a["title"]), "item": SITE + "/" + path}]}]}]
-        write(path + "index.html", page(path, a["seo_title"] + " | Engage Era", a["description"], body, depth=2, active="news", schema=schema, og=f"og/{a['slug']}.png"))
+        write(path + "index.html", page(path, a["seo_title"] + " | Engage Era", a["description"], body, depth=2, active="news", schema=schema, og=cover_rel(a)))
 
 
 # ---------- Studio ----------
@@ -446,13 +498,22 @@ def build_founder():
 <main id="main">
   <section class="page-hero gut">
     <div class="max founder-grid">
-      <div class="post">{cover({"slug": "founder", "title": "Ben Meller", "image": FOUNDER_PHOTO}, "../")}</div>
+      <div class="post">{picture(cover_rel({"slug": "founder", "image": FOUNDER_PHOTO}), "../", "Ben Meller", eager=True)}</div>
       <div class="copy">
         <span class="kicker">Founder</span>
         <h1>Ben Meller</h1>
         <div class="tag">The entrepreneur's entrepreneur.</div>
-        <p>Ben is the founder of Engage Era, a marketing news outlet, and Engage Era Studio, its in-house social media and content agency. He started Engage Era to cover marketing the way it actually happens: fast, from the inside, with the people making it.</p>
-        <p>He works alongside founders, artists and brands building audiences, and has created for names including SoFi, Oil Nut Bay, Good Molecules, Rise Above and Rome. He's based in Palm Beach and Jupiter, Florida, and spends a lot of time on the road with the people he works with.</p>
+        <p class="lede-big">Ben Meller is the founder of Engage Era, a marketing news outlet for brands and founders, and Engage Era Studio, the social media and content agency that runs alongside it.</p>
+        <h2>Why Engage Era exists</h2>
+        <p>Marketing changes every week. Platforms add features, put new ones behind paywalls, change how ads get approved and how posts get ranked. Most business owners find out late, usually after it has already cost them reach or money.</p>
+        <p>Engage Era exists to close that gap. Three times a week it covers what changed, who it affects and what to do about it, in plain language and with every fact linked to its source. Think of it as the place founders check to stay ahead, without scrolling through the noise.</p>
+        <h2>The newsroom and the studio</h2>
+        <p>The news and the agency feed each other. Covering platform changes, campaigns and founder stories every week means Engage Era Studio sees what works before it becomes common knowledge, and the Studio's clients get to act on it first. The Studio handles strategy, content production, social media management, paid social and search for a small number of partners at a time.</p>
+        <h2>Who Ben works with</h2>
+        <p>Ben works alongside founders, artists and brands building audiences, and has created for names including SoFi, Oil Nut Bay, Good Molecules, Rise Above, Rome, Better Life Work and Beardy Brandon. The common thread: people with something to say who want their brand to feel bigger than a typical small-business account.</p>
+        <p>He calls himself the entrepreneur's entrepreneur because that's the job: helping the people building something get seen for it.</p>
+        <h2>Where to find him</h2>
+        <p>Ben is based in Palm Beach and Jupiter, Florida, and spends a lot of time on the road with the people he works with. The fastest way to reach him is email or Instagram.</p>
         <div class="links"><a href="{IG_BEN}" rel="noopener">@benmeller</a><a href="../studio/index.html">Work with Ben</a><a href="mailto:{EMAIL}">{EMAIL}</a></div>
       </div>
     </div>
@@ -468,18 +529,43 @@ def build_founder():
 
 # ---------- The Brief ----------
 def build_brief():
+    recent = ARTICLES[:3]
+    sample = "".join(
+        f"""<li><span class="kicker">{x['cat_label']}</span><h3><a href="../news/{x['slug']}/index.html">{plain(x['title'])}</a></h3><p>{x['dek']}</p></li>"""
+        for x in recent)
     body = f"""{masthead(date=False)}
 <main id="main">
   <div class="page-hero gut"><div class="max"><span class="kicker">Newsletter</span><h1>The <span class="r">Brief</span></h1><p class="sub">Every Monday, Wednesday and Friday morning: the platform updates, campaigns and founder moves that matter for brands, in about three minutes. <b>Free.</b></p></div></div>
   {brief_band()}
-  <section class="band gut"><div class="max"><div class="why">
-    <div><h3>What changed</h3><p>Instagram, TikTok, Meta, Google and AI tools. The updates that affect brands, without the noise.</p></div>
-    <div><h3>What worked</h3><p>Campaigns and founder moves worth stealing from, and why they worked.</p></div>
-    <div><h3>What to do</h3><p>One practical takeaway in every issue you can use the same day.</p></div>
-  </div></div></section>
+  <section class="band gut"><div class="max">
+    <div class="head"><span class="kicker">What's inside</span><h2>Three sections. <span class="r">Three minutes.</span></h2></div>
+    <div class="why">
+      <div><h3>What changed</h3><p>Instagram, TikTok, Meta, Google and AI tools. The updates that affect brands, without the noise, each one linked to its source.</p></div>
+      <div><h3>What worked</h3><p>Campaigns and founder moves worth learning from, and the specific reason they worked.</p></div>
+      <div><h3>What to do</h3><p>One practical takeaway in every issue that you can use the same day, whether you run your own social or manage a team.</p></div>
+    </div>
+  </div></section>
+  <section class="band gut"><div class="max brief-info">
+    <div>
+      <div class="head"><span class="kicker">How it works</span><h2>Built for busy founders</h2></div>
+      <ul class="plain-list">
+        <li><b>When:</b> Monday, Wednesday and Friday mornings.</li>
+        <li><b>How long:</b> about three minutes to read.</li>
+        <li><b>Who it's for:</b> founders, marketers and anyone running a brand's social.</li>
+        <li><b>What it costs:</b> nothing. Unsubscribe anytime with one click.</li>
+        <li><b>How we report:</b> every fact links to its source. If something is unconfirmed, we say so.</li>
+      </ul>
+    </div>
+    <div class="sample">
+      <span class="kicker">Sample issue</span>
+      <p class="sample-sub">Built from recent Engage Era stories.</p>
+      <ol>{sample}</ol>
+      <p class="sample-take"><b>The takeaway:</b> pick one change above that touches your channels this week and test it before your competitors do.</p>
+    </div>
+  </div></section>
 </main>
 {footer()}"""
-    write("brief/index.html", page("brief/", "The Brief: Daily Marketing News Newsletter | Engage Era",
+    write("brief/index.html", page("brief/", "The Brief: Marketing News Newsletter for Brands | Engage Era",
                                    "The Brief is Engage Era's free newsletter, three times a week: platform updates, campaigns and founder moves that matter for brands, in three minutes.",
                                    body, depth=1, active="brief"))
 
@@ -526,13 +612,34 @@ def build_utility():
 <main id="main"><div class="page-hero gut"><div class="max"><span class="kicker">404</span><h1>Story <span class="r">not found.</span></h1><p class="sub">That page moved or never existed.</p><p style="margin-top:28px"><a class="btn" href="/index.html">Back to the news</a></p></div></div></main>
 {footer()}"""
     write("404.html", page("404", "Page not found | Engage Era", "Page not found.", nf, depth=0, noindex=True))
-    urls = ["", "news/", "studio/", "founder/", "brief/"] + [f"news/{a['slug']}/" for a in ARTICLES]
     today = datetime.date.today().isoformat()
-    sm = "".join(f"<url><loc>{SITE}/{u}</loc><lastmod>{today}</lastmod></url>" for u in urls)
+    newest = ARTICLES[0]["date"]
+    pages = [("", today), ("news/", today), ("studio/", today), ("founder/", today), ("brief/", today)] + [(f"news/{a['slug']}/", a.get("updated", a["date"])) for a in ARTICLES]
+    sm = "".join(f"<url><loc>{SITE}/{u}</loc><lastmod>{d}</lastmod></url>" for u, d in pages)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>\n')
-    write("_headers", "/results/*\n  X-Robots-Tag: noindex, nofollow\n/thanks/*\n  X-Robots-Tag: noindex\n/assets/*\n  Cache-Control: public, max-age=604800\n")
+    build_feed()
+    stale = os.path.join(ROOT, "_headers")
+    if os.path.exists(stale):
+        os.remove(stale)  # headers now live in netlify.toml
     write("robots.txt", f"User-agent: *\nAllow: /\nDisallow: /results/\nDisallow: /thanks/\n\nSitemap: {SITE}/sitemap.xml\n")
     write("assets/favicon.svg", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -208 710 710"><rect x="-20" y="-208" width="710" height="710" rx="140" fill="#060819"/><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5aaee6"/><stop offset="1" stop-color="#1466ff"/></linearGradient></defs><g fill="url(#g)"><path d="M51 0H346L297 67H39Z"/><path d="M31 117H261L216 176H20Z"/><path d="M11 227H247L420 0H670L658 67H440L269 293H0Z"/><path d="M466 117H650L640 176H422Z"/><path d="M389 227H631L620 293H342Z"/></g></svg>')
+
+
+# ---------- RSS ----------
+def build_feed():
+    def rfc822(d):
+        return datetime.datetime.combine(datetime.date.fromisoformat(d), datetime.time(9, 0), datetime.timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    items = "".join(
+        f"""<item><title>{html.escape(plain(a['title']))}</title><link>{SITE}/news/{a['slug']}/</link><guid isPermaLink="true">{SITE}/news/{a['slug']}/</guid>"""
+        f"""<pubDate>{rfc822(a['date'])}</pubDate><category>{html.escape(a['cat_label'])}</category><description>{html.escape(a['dek'])}</description></item>"""
+        for a in ARTICLES)
+    write("feed.xml", f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>
+<title>Engage Era</title><link>{SITE}/</link><description>Marketing news for brands and founders. Before it's news.</description><language>en-us</language>
+<atom:link href="{SITE}/feed.xml" rel="self" type="application/rss+xml"/><lastBuildDate>{rfc822(ARTICLES[0]['date'])}</lastBuildDate>
+{items}
+</channel></rss>
+""")
 
 
 # ---------- Share images (1200x630) ----------
@@ -646,5 +753,5 @@ def build_og():
 
 
 if __name__ == "__main__":
-    build_home(); build_news(); build_articles(); build_studio(); build_founder(); build_brief(); build_results(); build_utility(); build_og()
+    build_og(); build_home(); build_news(); build_articles(); build_studio(); build_founder(); build_brief(); build_results(); build_utility()
     print("Built into", os.path.abspath(ROOT))

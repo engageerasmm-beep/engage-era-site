@@ -29,9 +29,10 @@ Read `packet.txt` (format in GROK.md) and look at `post.jpg`.
 a. **Cover:** save `post.jpg` optimized to `public/assets/img/<slug>.jpg`
    (`python3 -c "from PIL import Image; Image.open('post.jpg').convert('RGB').save('public/assets/img/<slug>.jpg', quality=82, optimize=True, progressive=True)"`).
    Slug = the folder's short name (lowercase, dashes).
+   **Clean hero:** if the folder has `v1.jpg` (a clean visual with no headline text), save it center-cropped to 1080x1350 as `public/assets/img/hero/<slug>.jpg`. The site then uses it for the homepage hero, article header and cards, and keeps `post.jpg` for share previews. If there's only `v1.mp4`, skip the hero (the post is used instead) and mention it in the report so Ben can add a `v1.jpg`.
 b. **Article:** add a new block at the **top** of `ARTICLES` in `src/articles.py`, matching the existing news entries exactly (keys: slug, cat, cat_label, date, read, image, image_credit, title, seo_title, description, dek, tldr, faq, body).
    - `title`: the packet headline, Title Case, red word wrapped in `<r>…</r>`.
-   - `date`: today's date. `read`: honest estimate.
+   - `date`: the packet's `DATE:` (fall back to the folder name's date, then today). Articles are sorted by date automatically. `read`: honest estimate.
    - `body`: 400–700 words, plain and direct, sections: what happened, the details, why brands should care, what to do. Link each fact to its source inline. End with a `<h2>Sources</h2>` list.
    - `faq`: 3 questions people would actually search, answered in 1–2 sentences using only confirmed facts.
    - Match the voice of the existing articles. No hype, no invented numbers.

@@ -51,6 +51,7 @@ GUIDES (evergreen articles Claude writes)
 DELIVERY
 - Name the folder: YYYY-MM-DD short-name (lowercase, dashes), e.g. "2026-10-01 meta-one-pricing".
 - Put post.jpg and packet.txt inside it.
+- If you also make a clean version of the visual (no headline, no logo, no text), save it as v1.jpg (1080x1350) in the same folder. The website uses it as the article's hero image.
 - If you can save to Google Drive, save the folder into: Engage Era Website / Inbox. If you can't, give me both files and the folder name so I can save them.
 ```
 
