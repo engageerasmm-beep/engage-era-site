@@ -1,4 +1,4 @@
-# Automated publishing run (Mon / Wed / Fri 9 AM)
+# Automated publishing run (Mon–Fri 9 AM)
 
 This is the playbook the scheduled Claude task follows. Ben approved **automatic publishing**: stories that pass every check go live without asking. Anything that fails a check is **held, not published**, and reported to Ben.
 
