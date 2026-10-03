@@ -122,9 +122,9 @@ def brief_band(depth_note=""):
     return """<section class="brief gut" id="brief">
   <div class="max">
     <div>
-      <span class="kicker plain" style="color:#fff">The Brief · Every weekday</span>
+      <span class="kicker plain" style="color:#fff">The Brief · Mon, Wed, Fri</span>
       <h2 style="margin-top:12px">Marketing news.<br>Before it's news.</h2>
-      <p class="lede">The platform updates, campaigns and founder moves that matter, in a 3-minute read every weekday morning.</p>
+      <p class="lede">The platform updates, campaigns and founder moves that matter, in a 3-minute read every Monday, Wednesday and Friday morning.</p>
     </div>
     <form name="brief" method="POST" action="%UP%thanks/index.html" data-netlify="true" netlify-honeypot="company-site" novalidate>
       <input type="hidden" name="form-name" value="brief">
@@ -172,7 +172,7 @@ def write(rel, content):
 def build_home():
     up = ""
     lead, rest = ARTICLES[0], ARTICLES[1:]
-    ticker_items = [plain(a["title"]) for a in ARTICLES] + [plain(s["title"]) for s in INSTAGRAM] + ["The Brief: marketing news every weekday"]
+    ticker_items = [plain(a["title"]) for a in ARTICLES] + [plain(s["title"]) for s in INSTAGRAM] + ["The Brief: marketing news three times a week"]
     track = "".join(f"<span>{t}</span>" for t in ticker_items) * 2
     latest = "".join(
         f'<a class="item" href="news/{a["slug"]}/index.html"><span class="t">{datetime.date.fromisoformat(a["date"]).strftime("%b %-d")}</span><div><span class="kicker">{a["cat_label"]}</span><h3>{plain(a["title"])}</h3></div></a>'
@@ -229,7 +229,7 @@ def build_home():
 {footer()}"""
     schema = [{"@context": "https://schema.org", "@graph": [ORG, {"@type": "WebSite", "@id": SITE + "/#site", "name": "Engage Era", "url": SITE, "publisher": {"@id": SITE + "/#org"}}]}]
     write("index.html", page("", "Engage Era | Marketing News, Before It's News",
-                             "Marketing news for brands and founders: platform updates, campaigns and founder stories, every weekday. Plus Engage Era Studio, a social media and content agency in Palm Beach.",
+                             "Marketing news for brands and founders: platform updates, campaigns and founder stories, three times a week. Plus Engage Era Studio, a social media and content agency in Palm Beach.",
                              body, depth=0, schema=schema))
 
 
@@ -340,7 +340,7 @@ def build_studio():
     <div class="max">
       <div class="head"><span class="kicker">Why a newsroom runs a studio</span><h2>We see it first. <span class="r">You use it first.</span></h2></div>
       <div class="why">
-        <div><h3>We report daily</h3><p>Engage Era covers platform changes, campaigns and founder moves every weekday. Our partners act on what we learn before it's common knowledge.</p></div>
+        <div><h3>We report every week</h3><p>Engage Era covers platform changes, campaigns and founder moves three times a week. Our partners act on what we learn before it's common knowledge.</p></div>
         <div><h3>We build like publishers</h3><p>Audiences grow from a publishing rhythm, not random posts. We run your accounts the way a media company runs its channels.</p></div>
         <div><h3>We stay small</h3><p>We partner with a limited number of brands each quarter, so every account gets senior attention.</p></div>
       </div>
@@ -470,7 +470,7 @@ def build_founder():
 def build_brief():
     body = f"""{masthead(date=False)}
 <main id="main">
-  <div class="page-hero gut"><div class="max"><span class="kicker">Newsletter</span><h1>The <span class="r">Brief</span></h1><p class="sub">Every weekday morning: the platform updates, campaigns and founder moves that matter for brands, in about three minutes. <b>Free.</b></p></div></div>
+  <div class="page-hero gut"><div class="max"><span class="kicker">Newsletter</span><h1>The <span class="r">Brief</span></h1><p class="sub">Every Monday, Wednesday and Friday morning: the platform updates, campaigns and founder moves that matter for brands, in about three minutes. <b>Free.</b></p></div></div>
   {brief_band()}
   <section class="band gut"><div class="max"><div class="why">
     <div><h3>What changed</h3><p>Instagram, TikTok, Meta, Google and AI tools. The updates that affect brands, without the noise.</p></div>
@@ -480,7 +480,7 @@ def build_brief():
 </main>
 {footer()}"""
     write("brief/index.html", page("brief/", "The Brief: Daily Marketing News Newsletter | Engage Era",
-                                   "The Brief is Engage Era's free weekday newsletter: platform updates, campaigns and founder moves that matter for brands, in three minutes.",
+                                   "The Brief is Engage Era's free newsletter, three times a week: platform updates, campaigns and founder moves that matter for brands, in three minutes.",
                                    body, depth=1, active="brief"))
 
 
@@ -489,7 +489,7 @@ def build_results():
     names = "".join(f'<span class="name">{b}</span>' for b in BRANDS)
     body = f"""<div class="lockbar gut"><div class="max"><span class="brand">{MARK}<span class="word">Engage Era</span></span><span class="kicker plain">Private · Not for distribution</span></div></div>
 <main id="main">
-  <div class="page-hero gut"><div class="max"><span class="kicker">Prepared for <span class="fill">Client name</span></span><h1>Studio <span class="r">results</span></h1><p class="sub">Engage Era reports on marketing every weekday. <b>Engage Era Studio</b> uses what we learn to grow founders, artists and brands. Here's what that looks like in practice.</p></div></div>
+  <div class="page-hero gut"><div class="max"><span class="kicker">Prepared for <span class="fill">Client name</span></span><h1>Studio <span class="r">results</span></h1><p class="sub">Engage Era reports on marketing three times a week. <b>Engage Era Studio</b> uses what we learn to grow founders, artists and brands. Here's what that looks like in practice.</p></div></div>
   <section class="band gut"><div class="max"><div class="roster"><span class="kicker">Brands we've created for</span>{names}</div></div></section>
   <section class="band gut"><div class="max" style="display:grid;gap:24px">
     <div class="head" style="margin-bottom:12px"><span class="kicker">Case studies</span><h2>The work</h2></div>
@@ -519,7 +519,7 @@ def build_results():
 # ---------- Utility pages ----------
 def build_utility():
     thanks = f"""{masthead(date=False)}
-<main id="main"><div class="page-hero gut"><div class="max"><span class="kicker">Received</span><h1>You're <span class="r">in.</span></h1><p class="sub">Thanks. If you applied to the Studio, we'll reply within 48 hours. If you subscribed to The Brief, your first issue lands on the next weekday morning.</p><p style="margin-top:28px"><a class="btn" href="../index.html">Back to the news</a></p></div></div></main>
+<main id="main"><div class="page-hero gut"><div class="max"><span class="kicker">Received</span><h1>You're <span class="r">in.</span></h1><p class="sub">Thanks. If you applied to the Studio, we'll reply within 48 hours. If you subscribed to The Brief, your first issue lands the next Monday, Wednesday or Friday morning.</p><p style="margin-top:28px"><a class="btn" href="../index.html">Back to the news</a></p></div></div></main>
 {footer()}"""
     write("thanks/index.html", page("thanks/", "Thanks | Engage Era", "Thanks for reaching out to Engage Era.", thanks, depth=1, noindex=True))
     nf = f"""{masthead(date=False)}
